@@ -57,114 +57,114 @@ void setup()
 
 void loop() 
 {
-		char msgChar[sizeof(command)];
-		String msgString = "";
-		for(int i=0; i<(sizeof(command)); i++)
-		{
-			msgChar[i] = char(command[i]);
-			msgString = msgString + msgChar[i];
-		}
+	char msgChar[sizeof(command)+1];
+	String msgString = "";
+	for(int i=0; i<(sizeof(command)); i++)
+	{
+		msgChar[i] = char(command[i]);
+		msgString = msgString + msgChar[i];
+	}
+	Serial.println();
+
+	uint32_t address = 0xC383C;
+	Serial.print("Address: ");
+	Serial.println(address);
+	Serial.print("Message: ");
+	Serial.println(msgString);
+	Serial.println();
+
+	Serial.print(F("[Pager] Test#1: Send Tone ... "));
+	int state = pager.sendTone(address);
+	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+	    Serial.print(F("failed, code "));
+	   	Serial.println(state);
+	}
+	Serial.println();
+
+	delay(3000);
+
+	Serial.print(F("[Pager] Test#2: uint8 data ... "));
+	//PagerClient::transmit(uint8_t* data, size_t len, uint32_t addr, uint8_t encoding)
+	state = pager.transmit(command, sizeof(command), address, RADIOLIB_PAGER_ASCII);
+	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+	    Serial.print(F("failed, code "));
+	   	Serial.println(state);
+	}
+	Serial.println();
+
+	delay(3000);
+
+	Serial.print(F("[Pager] Test#3a: const char* str ... "));
+	const char* str1 = "This is a test";
+	//PagerClient::transmit(const char* str, uint32_t addr, uint8_t encoding)
+	state = pager.transmit(str1, address, RADIOLIB_PAGER_ASCII);
+	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+		Serial.print(F("failed, code "));
+		Serial.println(state);
+	}
+	Serial.println();
+
+	delay(3000);
+
+	Serial.print(F("[Pager] Test#3b: const char* str ... "));
+	//PagerClient::transmit(const char* str, uint32_t addr, uint8_t encoding)
+	state = pager.transmit(msgChar, address, RADIOLIB_PAGER_ASCII);
+  	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+	    Serial.print(F("failed, code "));
+	   	Serial.println(state);
+	}
+	Serial.println();
+
+	delay(3000);
+
+	Serial.print(F("[Pager] Test#4a: String str ... "));
+	String str2 = "This is a test";
+	//PagerClient::transmit(String& str, uint32_t addr, uint8_t encoding) 
+	state = pager.transmit(str2, address, RADIOLIB_PAGER_ASCII);
+  	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+	    Serial.print(F("failed, code "));
+	   	Serial.println(state);
+	}
 		Serial.println();
 
-		uint32_t address = 0xC383C;
-		Serial.print("Address: ");
-		Serial.println(address);
-		Serial.print("Message: ");
-		Serial.println(msgString);
-		Serial.println();
+	delay(3000);
 
-		Serial.print(F("[Pager] Test#1: Send Tone ... "));
-		int state = pager.sendTone(address);
-		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
-
-		delay(1000);
-
-		Serial.print(F("[Pager] Test#2: uint8 data ... "));
-		//PagerClient::transmit(uint8_t* data, size_t len, uint32_t addr, uint8_t encoding)
-		state |= pager.transmit(command, sizeof(command), address, RADIOLIB_PAGER_ASCII);
-		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
-
-		delay(1000);
-
-		Serial.print(F("[Pager] Test#3a: const char* str ... "));
-		const char* str1 = "This is a test";
-		//PagerClient::transmit(const char* str, uint32_t addr, uint8_t encoding)
-		state |= pager.transmit(str1, address, RADIOLIB_PAGER_ASCII);
-		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
-
-		delay(1000);
-
-		Serial.print(F("[Pager] Test#3b: const char* str ... "));
-		//PagerClient::transmit(const char* str, uint32_t addr, uint8_t encoding)
-		state |= pager.transmit(msgChar, address, RADIOLIB_PAGER_ASCII);
-  		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
-
-		delay(1000);
-
-		Serial.print(F("[Pager] Test#4a: String str ... "));
-		String str2 = "This is a test";
-		//PagerClient::transmit(String& str, uint32_t addr, uint8_t encoding) 
-		state |= pager.transmit(str2, address, RADIOLIB_PAGER_ASCII);
-  		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
-
-		delay(1000);
-
-		Serial.print(F("[Pager] Test#4b: String str ... "));
-		state |= pager.transmit(msgString, address, RADIOLIB_PAGER_ASCII);
-  		if(state == RADIOLIB_ERR_NONE) 
-		{
-    		Serial.println(F("success!"));
-		} 
-		else 
-		{
-		    Serial.print(F("failed, code "));
-	    	Serial.println(state);
-		}
-		Serial.println();
+	Serial.print(F("[Pager] Test#4b: String str ... "));
+	state = pager.transmit(msgString, address, RADIOLIB_PAGER_ASCII);
+  	if(state == RADIOLIB_ERR_NONE) 
+	{
+    	Serial.println(F("success!"));
+	} 
+	else 
+	{
+	    Serial.print(F("failed, code "));
+	   	Serial.println(state);
+	}
+	Serial.println();
 
 }
